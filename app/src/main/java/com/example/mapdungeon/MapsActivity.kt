@@ -9,24 +9,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.View
-import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import com.example.mapdungeon.databinding.ActivityMapsBinding
 
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissionsResultCallback {
 
+    private lateinit var mapsBinding: ActivityMapsBinding
     private lateinit var mMap: GoogleMap
     private val LOCATION_PERMISSION_REQUEST_CODE: Int = 1001
     private lateinit var location: Location
@@ -35,7 +32,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
+        mapsBinding = ActivityMapsBinding.inflate(layoutInflater)
+        val view = mapsBinding.root
+        setContentView(view)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -43,8 +43,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         location = Location(this, this)
 
-        val button: Button = this.findViewById(R.id.button4) as Button
-        button.setOnClickListener {
+        mapsBinding.button4.setOnClickListener {
             Log.d("debug", "button clicked")
             location.getLocation()
         }
