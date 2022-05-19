@@ -25,7 +25,7 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <activity
-            android:name=".MapsActivity"
+            android:name=".auth.LoginActivity"
             android:label="@string/title_activity_maps"
             android:exported="true">
             <intent-filter>
