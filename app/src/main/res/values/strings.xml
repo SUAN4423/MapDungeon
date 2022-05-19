@@ -2,6 +2,8 @@
     <string name="app_name">MapDungeon</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="title_activity_login">Map Dungeon</string>
+
     <!--
     Auth0 identifiers and settings
     ==============================

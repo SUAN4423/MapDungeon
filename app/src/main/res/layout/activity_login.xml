@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".auth.LoginActivity">
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -53,7 +55,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button_logout"
-                android:layout_margin="18dp"/>
+                android:layout_margin="18dp" />
 
             <LinearLayout
                 android:id="@+id/linearlayout_metadata"
@@ -72,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="@string/textview_metadata_heading"/>
+                    android:text="@string/textview_metadata_heading" />
 
                 <TextView
                     android:id="@+id/textview_metadata_info"
@@ -100,14 +102,14 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/button_get"
-                        android:layout_marginRight="8dp"/>
+                        android:layout_marginRight="8dp" />
 
                     <Button
                         android:id="@+id/button_set"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/button_set"
-                        android:layout_marginLeft="8dp"/>
+                        android:layout_marginLeft="8dp" />
 
                 </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.example.mapdungeon.auth
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -12,6 +13,7 @@ import com.auth0.android.management.UsersAPIClient
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
+import com.example.mapdungeon.MapsActivity
 import com.example.mapdungeon.R
 import com.example.mapdungeon.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
@@ -62,6 +64,8 @@ class LoginActivity : AppCompatActivity() {
                     showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
                     updateUI()
                     showUserProfile()
+                    val intent = Intent(this@LoginActivity, MapsActivity::class.java)
+                    startActivity(intent)
                 }
             })
     }
