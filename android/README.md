@@ -2,8 +2,7 @@
 
 ## How to Setup for Development
 
-1. Get Google Map API Key
-   following [this site](https://developers.google.com/maps/documentation/android-sdk/start?hl=ja)
+1. Get Google Map API Key following [this site](https://developers.google.com/maps/documentation/android-sdk/start?hl=ja)
 
 2. Add below sentence to  `local.properties` file in your android project root.
 
