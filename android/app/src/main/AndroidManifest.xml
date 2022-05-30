@@ -39,7 +39,12 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:exported="false"></activity>
+            android:exported="false" />
+
+        <activity
+            android:name=".judge.JudgeActivity"
+            android:label="Judge"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

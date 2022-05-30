@@ -1,10 +1,10 @@
 package com.example.mapdungeon.judge
 
-import android.app.Activity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
 
-class JudgeActivity: Activity() {
+class JudgeActivity: AppCompatActivity() {
     private lateinit var judgeBinding: ActivityJudgeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,5 +12,9 @@ class JudgeActivity: Activity() {
         judgeBinding = ActivityJudgeBinding.inflate(layoutInflater)
         val view = judgeBinding.root
         setContentView(view)
+
+        judgeBinding.returnButton.setOnClickListener {
+            finish()
+        }
     }
 }
