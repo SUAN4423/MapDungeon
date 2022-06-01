@@ -27,7 +27,7 @@ class Location(activity: Activity, classObject: MapsActivity) {
             interval = 10000                                   // 最遅の更新間隔(但し正確ではない。)
             fastestInterval = 5000                             // 最短の更新間隔
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY  // 精度重視
-        }
+        } // XXX: この設定の意味が不明
 
         // コールバック
         val locationCallback = object : LocationCallback() {

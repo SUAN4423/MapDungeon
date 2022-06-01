@@ -22,17 +22,21 @@ class Http : AsyncTask<Double, Void, String>() {
             con.connect()
 
             val input: InputStream = con.inputStream
-            val address: String? = parseResXml(input)
+            val address: HashMap<String, String>? = parseResXml(input)
+            addressMap = address
 //            Log.d("debug", address + " debug")
             input.close()
-            return address
+            if (address != null)
+                return address["prefecture"] + address["city"] + address["town"]
+            else
+                return null
         } catch (e: Exception) {
             Log.d("error", e.stackTraceToString())
         }
         return null
     }
 
-    private fun parseResXml(input: InputStream): String? {
+    private fun parseResXml(input: InputStream): HashMap<String, String>? {
         try {
             val parser: XmlPullParser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
@@ -50,8 +54,12 @@ class Http : AsyncTask<Double, Void, String>() {
                     XmlPullParser.START_TAG -> {
                         if ("city" == name) {
                             address["city"] = parser.nextText()
+                        } else if ("city-kana" == name) {
+                            address["city-kana"] = parser.nextText()
                         } else if ("town" == name) {
                             address["town"] = parser.nextText()
+                        } else if ("town-kana" == name) {
+                            address["town-kana"] = parser.nextText()
                         } else if ("prefecture" == name) {
                             address["prefecture"] = parser.nextText()
                         } else if ("postal" == name) {
@@ -69,7 +77,8 @@ class Http : AsyncTask<Double, Void, String>() {
                 }
                 eventType = parser.next()
             }
-            return address["prefecture"] + address["city"] + address["town"]
+            isUsed = false
+            return address //address["prefecture"] + address["city"] + address["town"]
         } catch (e: Exception) {
             Log.d("error", e.stackTraceToString())
         }
