@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import com.example.mapdungeon.databinding.ActivityMapsBinding
+import com.example.mapdungeon.judge.JudgeActivity
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -46,6 +47,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         mapsBinding.button4.setOnClickListener {
             Log.d("debug", "button clicked")
             location.getLocation()
+        }
+
+        mapsBinding.judgeButton.setOnClickListener {
+            val intent = Intent(this, JudgeActivity::class.java)
+            startActivity(intent)
         }
     }
 
