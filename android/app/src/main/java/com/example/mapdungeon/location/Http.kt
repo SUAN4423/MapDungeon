@@ -1,19 +1,21 @@
-package com.example.mapdungeon
+package com.example.mapdungeon.location
 
 import android.os.AsyncTask
 import android.util.Log
 import android.util.Xml
+import com.example.mapdungeon.Hiragana
+import com.example.mapdungeon.databinding.ActivityJudgeBinding
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class Http : AsyncTask<Double, Void, String>() {
-    public fun getAddressName(y: Double, x: Double): String? {
+class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
+    public fun getAddressName(dataset: HttpRequesetDataset): HttpRequesetDataset? {
         var con: HttpURLConnection;
         try {
             val url: URL =
-                URL("http://geoapi.heartrails.com/api/xml?method=searchByGeoLocation&x=$x&y=$y")
+                URL("http://geoapi.heartrails.com/api/xml?method=searchByGeoLocation&x=${dataset.getY()}&y=${dataset.getX()}")
 //            Log.d("debug", "http://geoapi.heartrails.com/api/xml?method=searchByGeoLocation&x=$x&y=$y")
             con = url.openConnection() as HttpURLConnection
             con.requestMethod = "GET"
@@ -26,10 +28,11 @@ class Http : AsyncTask<Double, Void, String>() {
             addressMap = address
 //            Log.d("debug", address + " debug")
             input.close()
-            if (address != null)
-                return address["prefecture"] + address["city"] + address["town"]
-            else
-                return null
+            if (address != null) {
+                dataset.setCityName(address["prefecture"] + address["city"] + address["town"])
+//                return address["prefecture"] + address["city"] + address["town"]
+            }
+            return dataset
         } catch (e: Exception) {
             Log.d("error", e.stackTraceToString())
         }
@@ -85,7 +88,19 @@ class Http : AsyncTask<Double, Void, String>() {
         return null
     }
 
-    override fun doInBackground(vararg params: Double?): String? {
-        return getAddressName(params[0]!!, params[1]!!)
+    override fun doInBackground(vararg params: HttpRequesetDataset?): HttpRequesetDataset? {
+        return getAddressName(params[0]!!)
+    }
+
+    override fun onPostExecute(result: HttpRequesetDataset?) {
+        if (result!!.getBinding() != null) { // NOTE: 画面更新処理
+            val successCity: Boolean = Hiragana.checkLocation()
+            if (successCity)
+                (result.getBinding() as ActivityJudgeBinding).judgeText.text = "「${locateChar}」の付く市区町村に\n到着しました！"
+            else if (Hiragana.getFirstKana() != null)
+                (result.getBinding() as ActivityJudgeBinding).judgeText.text =
+                    "「${locateChar}」の付く市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
+            (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
+        }
     }
 }

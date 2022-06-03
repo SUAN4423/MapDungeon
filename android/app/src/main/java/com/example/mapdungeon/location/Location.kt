@@ -1,4 +1,4 @@
-package com.example.mapdungeon
+package com.example.mapdungeon.location
 
 import android.Manifest
 import android.app.Activity
@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Looper
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.example.mapdungeon.MapsActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -63,11 +64,12 @@ class Location(activity: Activity, classObject: MapsActivity) {
 
     public fun getLocation() {
         val task = Http()
-        task.execute(x, y)
+        val dataset: HttpRequesetDataset = HttpRequesetDataset(x, y, null, null)
+        task.execute(dataset)
         Toast.makeText(
             _activity,
-            "緯度:${x}, 経度:${y}, ${
-                task.get()
+            "緯度:$x, 経度:$y, ${
+                task.get().getCityName()
             }", Toast.LENGTH_LONG
         ).show()
     }

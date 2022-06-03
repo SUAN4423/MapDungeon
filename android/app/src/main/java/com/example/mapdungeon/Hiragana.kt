@@ -1,11 +1,7 @@
 package com.example.mapdungeon
 
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
-import android.widget.Toast
-import com.example.mapdungeon.databinding.ActivityMapsBinding
-import com.example.mapdungeon.judge.JudgeActivity
+import com.example.mapdungeon.location.addressMap
+import com.example.mapdungeon.location.locateChar
 import kotlin.random.Random
 
 class Hiragana {
