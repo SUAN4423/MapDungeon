@@ -21,6 +21,7 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
             con.requestMethod = "GET"
             con.instanceFollowRedirects = false
             con.doInput = true
+            con.connectTimeout = 100000
             con.connect()
 
             val input: InputStream = con.inputStream
@@ -94,13 +95,16 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
 
     override fun onPostExecute(result: HttpRequesetDataset?) {
         if (result!!.getBinding() != null) { // NOTE: 画面更新処理
-            val successCity: Boolean = Hiragana.checkLocation()
-            if (successCity)
-                (result.getBinding() as ActivityJudgeBinding).judgeText.text = "「${locateChar}」の付く市区町村に\n到着しました！"
-            else if (Hiragana.getFirstKana() != null)
-                (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                    "「${locateChar}」の付く市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
-            (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
+            if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
+                val successCity: Boolean = Hiragana.checkLocation()
+                if (successCity)
+                    (result.getBinding() as ActivityJudgeBinding).judgeText.text =
+                        "「${locateChar}」の付く市区町村に\n到着しました！"
+                else if (Hiragana.getFirstKana() != null)
+                    (result.getBinding() as ActivityJudgeBinding).judgeText.text =
+                        "「${locateChar}」の付く市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
+                (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
+            }
         }
     }
 }

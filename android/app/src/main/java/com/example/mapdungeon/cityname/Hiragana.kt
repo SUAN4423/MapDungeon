@@ -15,7 +15,11 @@ class Hiragana {
 //            val randomInt: Int = Random.nextInt(85)
 //            var retChar: Char = 'ぁ' + randomInt
             var retChar: Char = '*'
-            val randomInt: Int = Random.nextInt(Topofhiragana.hiraganaPercent.size)
+            var randomSum: Int = 0
+            Topofhiragana.hiraganaPercent.forEach {
+                randomSum += it.second
+            }
+            val randomInt: Int = Random.nextInt(randomSum)
             var sum: Int = 0
             Topofhiragana.hiraganaPercent.forEach {
                 if (retChar == '*') {
