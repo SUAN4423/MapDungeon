@@ -2,7 +2,6 @@ package com.example.mapdungeon.judge
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mapdungeon.Hiragana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
 import com.example.mapdungeon.location.*
 

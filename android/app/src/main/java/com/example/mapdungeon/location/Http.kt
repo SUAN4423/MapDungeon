@@ -3,7 +3,7 @@ package com.example.mapdungeon.location
 import android.os.AsyncTask
 import android.util.Log
 import android.util.Xml
-import com.example.mapdungeon.Hiragana
+import com.example.mapdungeon.cityname.Hiragana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream

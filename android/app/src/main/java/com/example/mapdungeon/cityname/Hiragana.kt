@@ -1,4 +1,4 @@
-package com.example.mapdungeon
+package com.example.mapdungeon.cityname
 
 import com.example.mapdungeon.location.addressMap
 import com.example.mapdungeon.location.locateChar
@@ -6,13 +6,25 @@ import kotlin.random.Random
 
 class Hiragana {
     companion object {
+
         public fun setRandomHiragana() {
             locateChar = getRandomHiragana()
         }
 
         private fun getRandomHiragana(): Char { // TODO: ひらがなにはあるが、それから始まる日本の都市がない場合その都市の建設(例: "ん"から始まる都市)
-            val randomInt: Int = Random.nextInt(85)
-            var retChar: Char = 'ぁ' + randomInt
+//            val randomInt: Int = Random.nextInt(85)
+//            var retChar: Char = 'ぁ' + randomInt
+            var retChar: Char = '*'
+            val randomInt: Int = Random.nextInt(Topofhiragana.hiraganaPercent.size)
+            var sum: Int = 0
+            Topofhiragana.hiraganaPercent.forEach {
+                if (retChar == '*') {
+                    sum += it.second
+                    if (randomInt < sum) {
+                        retChar = it.first
+                    }
+                }
+            }
             return retChar
         }
 
@@ -39,6 +51,28 @@ class Hiragana {
                 } else { //○○市
                     firstKana = cityKana[0]
                 }
+            }
+            when (firstKana) {
+                'が' -> firstKana = 'か'
+                'ぎ' -> firstKana = 'き'
+                'ぐ' -> firstKana = 'く'
+                'げ' -> firstKana = 'け'
+                'ご' -> firstKana = 'こ'
+                'ざ' -> firstKana = 'さ'
+                'じ' -> firstKana = 'し'
+                'ず' -> firstKana = 'す'
+                'ぜ' -> firstKana = 'せ'
+                'ぞ' -> firstKana = 'そ'
+                'だ' -> firstKana = 'た'
+                'ぢ' -> firstKana = 'ち'
+                'づ' -> firstKana = 'つ'
+                'で' -> firstKana = 'て'
+                'ど' -> firstKana = 'と'
+                'ば', 'ぱ' -> firstKana = 'は'
+                'び', 'ぴ' -> firstKana = 'ひ'
+                'ぶ', 'ぷ' -> firstKana = 'ふ'
+                'べ', 'ぺ' -> firstKana = 'へ'
+                'ぼ', 'ぽ' -> firstKana = 'ほ'
             }
             return firstKana
         }

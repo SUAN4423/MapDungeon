@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import com.example.mapdungeon.cityname.Hiragana
 import com.example.mapdungeon.databinding.ActivityMapsBinding
 import com.example.mapdungeon.judge.JudgeActivity
 import com.example.mapdungeon.location.Location
