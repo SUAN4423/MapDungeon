@@ -50,9 +50,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             Log.d("debug", "button clicked")
             locationGetAndCheck(location)
         }
+
         mapsBinding.judgeButton.setOnClickListener {
-            checkLocation(this, mapsBinding)
+            val intent = Intent(this, JudgeActivity::class.java)
+            startActivity(intent)
         }
+//        mapsBinding.judgeButton.setOnClickListener {
+//            checkLocation(this, mapsBinding)
+//        }
 
         Hiragana.setRandomHiragana();
         mapsBinding.themeText.text = "今のお題は「" + locateChar + "」です"
@@ -60,51 +65,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
     fun locationGetAndCheck(locaton: Location) {
         location.getLocation()
-    }
-
-    fun checkLocation(activity: Activity, mapsBinding: ActivityMapsBinding) {
-        if (addressMap != null) {
-            val city: String? = addressMap!!["city"]
-            val cityKana: String? = addressMap!!["city-kana"]
-            val town: String? = addressMap!!["town"]
-            val townKana: String? = addressMap!!["town-kana"]
-            var firstKana: Char? = null
-            if (city != null && cityKana != null && town != null && townKana != null) {
-                if (city == "郡上市" || city == "蒲郡市") { //○○郡××としたいときの例外処理
-                    firstKana = cityKana[0]
-                } else if (city.indexOf("郡") >= 0) { //○○郡××
-                    val indexOfGUN = cityKana.indexOf("ぐん") + 2
-                    firstKana = cityKana[indexOfGUN]
-                } else { //○○市
-                    firstKana = cityKana[0]
-                }
-                Log.d("debug", firstKana!! + " " + cityKana)
-//                Toast.makeText(
-//                    activity,
-//                    "${firstKana!!} ${cityKana}", Toast.LENGTH_LONG
-//                ).show()
-                if (firstKana!! == locateChar) {
-                    Toast.makeText(
-                        activity,
-                        "\"${locateChar}\"から始まる市区町村にたどり着きました！！！",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    Hiragana.setRandomHiragana();
-                    mapsBinding.themeText.text = "今のお題は「" + locateChar + "」です"
-                } else {
-                    Toast.makeText(
-                        activity,
-                        "\"${locateChar}\"から始まる市区町村へ行ってください、頑張って！ (現在の頭文字: \"${firstKana!!}\")",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-
-        mapsBinding.judgeButton.setOnClickListener {
-            val intent = Intent(this, JudgeActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     /**
