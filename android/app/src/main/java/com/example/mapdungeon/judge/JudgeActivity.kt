@@ -14,6 +14,9 @@ class JudgeActivity : AppCompatActivity() {
         val view = judgeBinding.root
         setContentView(view)
 
+        val latitude = intent.getDoubleExtra(EXTRA_LATITUDE, 0.0)
+        val longitude = intent.getDoubleExtra(EXTRA_LONGITUDE, 0.0)
+
         judgeBinding.judgeText.text = "確認中"
         judgeBinding.cityText.text = ""
 //        judgeBinding.cityText.text = Hiragana.getCityName()
@@ -30,7 +33,7 @@ class JudgeActivity : AppCompatActivity() {
 //                "現在位置が取得されていません"
 
         val task = Http()
-        val dataset: HttpRequesetDataset = HttpRequesetDataset(x, y, this, judgeBinding)
+        val dataset: HttpRequesetDataset = HttpRequesetDataset(latitude, longitude, this, judgeBinding)
         task.execute(dataset)
 
         judgeBinding.returnButton.setOnClickListener {

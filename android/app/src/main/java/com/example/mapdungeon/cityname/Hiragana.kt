@@ -1,11 +1,11 @@
 package com.example.mapdungeon.cityname
 
 import com.example.mapdungeon.location.addressMap
-import com.example.mapdungeon.location.locateChar
 import kotlin.random.Random
 
 class Hiragana {
     companion object {
+        private var locateChar: Char = 'あ'
 
         public fun setRandomHiragana() {
             locateChar = getRandomHiragana()
@@ -30,6 +30,10 @@ class Hiragana {
                 }
             }
             return retChar
+        }
+
+        public fun getNowMission(): Char {
+            return locateChar
         }
 
         public fun getCityName(): String {

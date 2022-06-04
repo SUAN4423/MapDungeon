@@ -17,6 +17,9 @@ class Location(activity: Activity, classObject: MapsActivity) {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var _activity: Activity
 
+    public var latitude: Double = 0.0
+    public var longitude: Double = 0.0
+
     init {
         _activity = activity
         fusedLocationClient = FusedLocationProviderClient(activity)
@@ -35,8 +38,8 @@ class Location(activity: Activity, classObject: MapsActivity) {
             override fun onLocationResult(locationResult: LocationResult?) {
                 // 更新直後の位置が格納されているはず
                 val location = locationResult?.lastLocation ?: return
-                x = location.latitude
-                y = location.longitude
+                latitude = location.latitude
+                longitude = location.longitude
             }
         }
 
@@ -62,13 +65,13 @@ class Location(activity: Activity, classObject: MapsActivity) {
         )
     }
 
-    public fun getLocation() {
+    public fun showLocation() {
         val task = Http()
-        val dataset: HttpRequesetDataset = HttpRequesetDataset(x, y, null, null)
+        val dataset: HttpRequesetDataset = HttpRequesetDataset(latitude, longitude, null, null)
         task.execute(dataset)
         Toast.makeText(
             _activity,
-            "緯度:$x, 経度:$y, ${
+            "緯度:$latitude, 経度:$longitude, ${
                 task.get().getCityName()
             }", Toast.LENGTH_LONG
         ).show()

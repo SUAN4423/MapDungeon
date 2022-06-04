@@ -4,8 +4,8 @@ import android.app.Activity
 import androidx.viewbinding.ViewBinding
 
 class HttpRequesetDataset(
-    x: Double,
-    y: Double,
+    latitude: Double,
+    longitude: Double,
     activity: Activity?,
     binding: ViewBinding?
 ) {
@@ -16,8 +16,8 @@ class HttpRequesetDataset(
     private var _cityname: String? = null
 
     init {
-        _x = x
-        _y = y
+        _x = latitude
+        _y = longitude
         _activity = activity
         _binding = binding
     }

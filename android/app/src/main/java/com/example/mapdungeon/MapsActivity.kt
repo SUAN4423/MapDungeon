@@ -18,8 +18,9 @@ import androidx.core.content.ContextCompat
 import com.example.mapdungeon.cityname.Hiragana
 import com.example.mapdungeon.databinding.ActivityMapsBinding
 import com.example.mapdungeon.judge.JudgeActivity
+import com.example.mapdungeon.location.EXTRA_LATITUDE
+import com.example.mapdungeon.location.EXTRA_LONGITUDE
 import com.example.mapdungeon.location.Location
-import com.example.mapdungeon.location.locateChar
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -53,7 +54,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         }
 
         mapsBinding.judgeButton.setOnClickListener {
-            val intent = Intent(this, JudgeActivity::class.java)
+            val intent = Intent(this, JudgeActivity::class.java).apply {
+                putExtra(EXTRA_LATITUDE, location.latitude)
+                putExtra(EXTRA_LONGITUDE, location.longitude)
+            }
             startActivity(intent)
         }
 //        mapsBinding.judgeButton.setOnClickListener {
@@ -61,11 +65,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 //        }
 
         Hiragana.setRandomHiragana();
-        mapsBinding.themeText.text = "今のお題は「" + locateChar + "」です"
+        mapsBinding.themeText.text = "今のお題は「" + Hiragana.getNowMission() + "」です"
     }
 
     fun locationGetAndCheck(locaton: Location) {
-        location.getLocation()
+        location.showLocation()
     }
 
     /**
