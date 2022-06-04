@@ -3,6 +3,7 @@ package com.example.mapdungeon.location
 import android.os.AsyncTask
 import android.util.Log
 import android.util.Xml
+import com.example.mapdungeon.cityname.AddressMap
 import com.example.mapdungeon.cityname.Hiragana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
 import org.xmlpull.v1.XmlPullParser
@@ -25,12 +26,12 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
             con.connect()
 
             val input: InputStream = con.inputStream
-            val address: HashMap<String, String>? = parseResXml(input)
-            addressMap = address
+            val address: AddressMap? = parseResXml(input)
+            Hiragana.addressMap = address
 //            Log.d("debug", address + " debug")
             input.close()
             if (address != null) {
-                dataset.setCityName(address["prefecture"] + address["city"] + address["town"])
+                dataset.setCityName(address.prefecture + address.city + address.town)
 //                return address["prefecture"] + address["city"] + address["town"]
             }
             return dataset
@@ -40,34 +41,35 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
         return null
     }
 
-    private fun parseResXml(input: InputStream): HashMap<String, String>? {
+    private fun parseResXml(input: InputStream): AddressMap? {
         try {
             val parser: XmlPullParser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
             parser.setInput(input, "UTF-8")
 
-            var address: HashMap<String, String> = HashMap()
             var isLast: Boolean = false
 
             var eventType: Int = parser.eventType;
 //            Log.d("debug", "${eventType != XmlPullParser.END_DOCUMENT}")
+
+            var prefecture = ""; var city = ""; var city_kana = ""; var town = ""; var town_kana = ""; var postal = ""
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 val name: String? = parser.name
 //                Log.d("debug", "${name} ${eventType}")
                 when (eventType) {
                     XmlPullParser.START_TAG -> {
                         if ("city" == name) {
-                            address["city"] = parser.nextText()
+                            city = parser.nextText()
                         } else if ("city-kana" == name) {
-                            address["city-kana"] = parser.nextText()
+                            city_kana = parser.nextText()
                         } else if ("town" == name) {
-                            address["town"] = parser.nextText()
+                            town = parser.nextText()
                         } else if ("town-kana" == name) {
-                            address["town-kana"] = parser.nextText()
+                            town_kana = parser.nextText()
                         } else if ("prefecture" == name) {
-                            address["prefecture"] = parser.nextText()
+                            prefecture = parser.nextText()
                         } else if ("postal" == name) {
-                            address["postal"] = parser.nextText()
+                            postal = parser.nextText()
                         }
                     }
                     XmlPullParser.END_TAG -> {
@@ -82,6 +84,7 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
                 eventType = parser.next()
             }
             isUsed = false
+            val address = AddressMap(prefecture, city, city_kana, town, town_kana, postal)
             return address //address["prefecture"] + address["city"] + address["town"]
         } catch (e: Exception) {
             Log.d("error", e.stackTraceToString())

@@ -1,11 +1,11 @@
 package com.example.mapdungeon.cityname
 
-import com.example.mapdungeon.location.addressMap
 import kotlin.random.Random
 
 class Hiragana {
     companion object {
         private var locateChar: Char = 'あ'
+        public var addressMap: AddressMap? = null
 
         public fun setRandomHiragana() {
             locateChar = getRandomHiragana()
@@ -38,17 +38,17 @@ class Hiragana {
 
         public fun getCityName(): String {
             if (addressMap != null) {
-                return addressMap!!["prefecture"] + addressMap!!["city"] + addressMap!!["town"]
+                return addressMap!!.prefecture + addressMap!!.city + addressMap!!.town
             } else {
                 return "null"
             }
         }
 
         public fun getFirstKana(): Char? {
-            val city: String? = addressMap!!["city"]
-            val cityKana: String? = addressMap!!["city-kana"]
-            val town: String? = addressMap!!["town"]
-            val townKana: String? = addressMap!!["town-kana"]
+            val city: String? = addressMap!!.city
+            val cityKana: String? = addressMap!!.city_kana
+            val town: String? = addressMap!!.town
+            val townKana: String? = addressMap!!.town_kana
             var firstKana: Char? = null
             if (city != null && cityKana != null && town != null && townKana != null) {
                 if (city == "郡上市" || city == "蒲郡市") { //○○郡××としたいときの例外処理
@@ -95,23 +95,7 @@ class Hiragana {
 //                    activity,
 //                    "${firstKana!!} ${cityKana}", Toast.LENGTH_LONG
 //                ).show()
-                if (firstKana!! == locateChar) {
-//                    Toast.makeText(
-//                        activity,
-//                        "\"${locateChar}\"から始まる市区町村にたどり着きました！！！",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                    Hiragana.setRandomHiragana();
-//                    mapsBinding.themeText.text = "今のお題は「" + locateChar + "」です"
-                    return true
-                } else {
-//                    Toast.makeText(
-//                        activity,
-//                        "\"${locateChar}\"から始まる市区町村へ行ってください、頑張って！ (現在の頭文字: \"${firstKana!!}\")",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-                    return false
-                }
+                return firstKana!! == locateChar
             }
             return false
         }
