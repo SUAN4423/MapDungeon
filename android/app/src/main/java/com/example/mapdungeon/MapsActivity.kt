@@ -15,8 +15,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import com.example.mapdungeon.cityname.Hiragana
 import com.example.mapdungeon.databinding.ActivityMapsBinding
 import com.example.mapdungeon.judge.JudgeActivity
+import com.example.mapdungeon.location.EXTRA_LATITUDE
+import com.example.mapdungeon.location.EXTRA_LONGITUDE
+import com.example.mapdungeon.location.Location
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -46,13 +50,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         mapsBinding.button4.setOnClickListener {
             Log.d("debug", "button clicked")
-            location.getLocation()
+            locationGetAndCheck(location)
         }
 
         mapsBinding.judgeButton.setOnClickListener {
-            val intent = Intent(this, JudgeActivity::class.java)
+            val intent = Intent(this, JudgeActivity::class.java).apply {
+                putExtra(EXTRA_LATITUDE, location.latitude)
+                putExtra(EXTRA_LONGITUDE, location.longitude)
+            }
             startActivity(intent)
         }
+//        mapsBinding.judgeButton.setOnClickListener {
+//            checkLocation(this, mapsBinding)
+//        }
+
+        Hiragana.setRandomHiragana();
+        mapsBinding.themeText.text = "今のお題は「" + Hiragana.getNowMission() + "」です"
+    }
+
+    fun locationGetAndCheck(locaton: Location) {
+        location.showLocation()
     }
 
     /**

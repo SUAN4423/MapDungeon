@@ -48,26 +48,28 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        WebAuthProvider
-            .login(account)
-            .withScheme(getString(R.string.com_auth0_scheme))
-            .withScope(getString(R.string.login_scopes))
-            .withAudience(getString(R.string.login_audience, getString(R.string.com_auth0_domain)))
-            .start(this, object : Callback<Credentials, AuthenticationException> {
-
-                override fun onFailure(exception: AuthenticationException) {
-                    showSnackBar(getString(R.string.login_failure_message, exception.getCode()))
-                }
-
-                override fun onSuccess(credentials: Credentials) {
-                    cachedCredentials = credentials
-                    showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
-                    updateUI()
-                    showUserProfile()
-                    val intent = Intent(this@LoginActivity, MapsActivity::class.java)
-                    startActivity(intent)
-                }
-            })
+//        WebAuthProvider
+//            .login(account)
+//            .withScheme(getString(R.string.com_auth0_scheme))
+//            .withScope(getString(R.string.login_scopes))
+//            .withAudience(getString(R.string.login_audience, getString(R.string.com_auth0_domain)))
+//            .start(this, object : Callback<Credentials, AuthenticationException> {
+//
+//                override fun onFailure(exception: AuthenticationException) {
+//                    showSnackBar(getString(R.string.login_failure_message, exception.getCode()))
+//                }
+//
+//                override fun onSuccess(credentials: Credentials) {
+//                    cachedCredentials = credentials
+//                    showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
+//                    updateUI()
+//                    showUserProfile()
+//                    val intent = Intent(this@LoginActivity, MapsActivity::class.java)
+//                    startActivity(intent)
+//                }
+//            })
+        val intent = Intent(this@LoginActivity, MapsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun logout() {

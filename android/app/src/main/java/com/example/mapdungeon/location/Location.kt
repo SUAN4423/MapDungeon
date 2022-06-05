@@ -1,4 +1,4 @@
-package com.example.mapdungeon
+package com.example.mapdungeon.location
 
 import android.Manifest
 import android.app.Activity
@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Looper
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.example.mapdungeon.MapsActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -15,6 +16,9 @@ import com.google.android.gms.location.LocationResult
 class Location(activity: Activity, classObject: MapsActivity) {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var _activity: Activity
+
+    public var latitude: Double = 0.0
+    public var longitude: Double = 0.0
 
     init {
         _activity = activity
@@ -27,15 +31,15 @@ class Location(activity: Activity, classObject: MapsActivity) {
             interval = 10000                                   // 最遅の更新間隔(但し正確ではない。)
             fastestInterval = 5000                             // 最短の更新間隔
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY  // 精度重視
-        }
+        } // XXX: この設定の意味が不明
 
         // コールバック
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 // 更新直後の位置が格納されているはず
                 val location = locationResult?.lastLocation ?: return
-                x = location.latitude
-                y = location.longitude
+                latitude = location.latitude
+                longitude = location.longitude
             }
         }
 
@@ -61,13 +65,14 @@ class Location(activity: Activity, classObject: MapsActivity) {
         )
     }
 
-    public fun getLocation() {
+    public fun showLocation() {
         val task = Http()
-        task.execute(x, y)
+        val dataset: HttpRequesetDataset = HttpRequesetDataset(latitude, longitude, null, null)
+        task.execute(dataset)
         Toast.makeText(
             _activity,
-            "緯度:${x}, 経度:${y}, ${
-                task.get()
+            "緯度:$latitude, 経度:$longitude, ${
+                task.get().getCityName()
             }", Toast.LENGTH_LONG
         ).show()
     }
