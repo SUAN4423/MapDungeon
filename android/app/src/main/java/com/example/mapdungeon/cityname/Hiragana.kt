@@ -8,6 +8,7 @@ import java.io.InputStreamReader
 import java.nio.file.Paths
 import kotlin.random.Random
 import com.opencsv.CSVReader
+import java.io.InputStream
 
 class Hiragana {
     companion object {
@@ -52,16 +53,6 @@ class Hiragana {
         }
 
         public fun getFirstKana(activity: AppCompatActivity): Char? {
-            val assetManager : AssetManager = activity.resources.assets
-            val file = assetManager.open("townname.csv")
-            val fileReader = BufferedReader(InputStreamReader(file))
-            var fi: Char? = null
-            fileReader.forEachLine {
-                var column = it.split(",").toTypedArray()
-                val det = column[3] + column[5]
-                if(det == addressMap!!.city_kana + addressMap!!.town_kana) fi = column[5][0]
-            }
-            Log.d("debug", "fi : ${fi}")
             val city: String? = addressMap!!.city
             val cityKana: String? = addressMap!!.city_kana
             val town: String? = addressMap!!.town
@@ -77,6 +68,19 @@ class Hiragana {
                     firstKana = cityKana[0]
                 }
             }
+            val assetManager : AssetManager = activity.resources.assets
+            val file = assetManager.open("townname.csv")
+            val fileReader = BufferedReader(InputStreamReader(file, "MS932"))
+            var fi: Char? = null
+            fileReader.forEachLine {
+                var column = it.split(",").toTypedArray()
+                val det = (column[3] + column[5]).replace("\"", "")
+                if((cityKana + townKana).indexOf(det) >= 0) fi = column[5][1]
+//                if(det.equals(addressMap!!.city_kana + addressMap!!.town_kana)) fi = column[5][0]
+//                Log.d("debug", "det: ${det}, now: ${cityKana + townKana}")
+            }
+            firstKana = fi
+//            Log.d("debug", "fi : ${fi}")
             when (firstKana) {
                 'が' -> firstKana = 'か'
                 'ぎ' -> firstKana = 'き'
