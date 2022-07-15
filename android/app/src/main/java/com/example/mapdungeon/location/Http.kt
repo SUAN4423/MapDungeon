@@ -102,10 +102,10 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
                 val successCity: Boolean = Hiragana.checkLocation()
                 if (successCity)
                     (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getNowMission()}」の付く市区町村に\n到着しました！"
+                        "「${Hiragana.getNowMission()}」から始まる\n市区町村に\n到着しました！"
                 else if (Hiragana.getFirstKana() != null)
                     (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getNowMission()}」の付く市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
+                        "「${Hiragana.getNowMission()}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
                 (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
             }
         }
