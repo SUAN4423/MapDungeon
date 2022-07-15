@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:20.1.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.auth0.android:auth0:2.0.0'
+    implementation 'com.opencsv:opencsv:5.6'
+    implementation 'org.projectlombok:lombok:1.18.24'
 
     // ref: https://qiita.com/TAKANEKOMACHI/items/d0a23ae3ae3ac2a90dd7#%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%B3%95
     constraints {

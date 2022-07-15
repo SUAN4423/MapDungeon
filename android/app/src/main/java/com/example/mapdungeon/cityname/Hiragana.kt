@@ -1,6 +1,13 @@
 package com.example.mapdungeon.cityname
 
+import android.content.res.AssetManager
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.nio.file.Paths
 import kotlin.random.Random
+import com.opencsv.CSVReader
 
 class Hiragana {
     companion object {
@@ -44,7 +51,17 @@ class Hiragana {
             }
         }
 
-        public fun getFirstKana(): Char? {
+        public fun getFirstKana(activity: AppCompatActivity): Char? {
+            val assetManager : AssetManager = activity.resources.assets
+            val file = assetManager.open("townname.csv")
+            val fileReader = BufferedReader(InputStreamReader(file))
+            var fi: Char? = null
+            fileReader.forEachLine {
+                var column = it.split(",").toTypedArray()
+                val det = column[3] + column[5]
+                if(det == addressMap!!.city_kana + addressMap!!.town_kana) fi = column[5][0]
+            }
+            Log.d("debug", "fi : ${fi}")
             val city: String? = addressMap!!.city
             val cityKana: String? = addressMap!!.city_kana
             val town: String? = addressMap!!.town
@@ -86,10 +103,10 @@ class Hiragana {
         }
 
         //        public fun checkLocation(activity: Activity, mapsBinding: ActivityMapsBinding):Boolean {
-        public fun checkLocation(): Boolean {
+        public fun checkLocation(activity: AppCompatActivity): Boolean {
             if (addressMap != null) {
                 var firstKana: Char? = null
-                firstKana = getFirstKana()
+                firstKana = getFirstKana(activity)
 //                Log.d("debug", firstKana!! + " " + cityKana)
 //                Toast.makeText(
 //                    activity,
