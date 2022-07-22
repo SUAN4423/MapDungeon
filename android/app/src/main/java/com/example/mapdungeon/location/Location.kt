@@ -67,7 +67,7 @@ class Location(activity: Activity, classObject: MapsActivity) {
 
     public fun showLocation() {
         val task = Http()
-        val dataset: HttpRequesetDataset = HttpRequesetDataset(latitude, longitude, null, null)
+        val dataset: HttpRequestDataset = HttpRequestDataset(latitude, longitude, null, null)
         task.execute(dataset)
         Toast.makeText(
             _activity,

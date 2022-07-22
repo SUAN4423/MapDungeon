@@ -15,7 +15,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
-import com.example.mapdungeon.cityname.Hiragana
+import com.example.mapdungeon.cityname.getRandomHiragana
+import com.example.mapdungeon.cityname.missionFirstKana
 import com.example.mapdungeon.databinding.ActivityMapsBinding
 import com.example.mapdungeon.judge.JudgeActivity
 import com.example.mapdungeon.location.EXTRA_LATITUDE
@@ -50,7 +51,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         mapsBinding.button4.setOnClickListener {
             Log.d("debug", "button clicked")
-            locationGetAndCheck(location)
+            toastLocation(location)
         }
 
         mapsBinding.judgeButton.setOnClickListener {
@@ -64,11 +65,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 //            checkLocation(this, mapsBinding)
 //        }
 
-        Hiragana.setRandomHiragana();
-        mapsBinding.themeText.text = "今のお題は「" + Hiragana.getNowMission() + "」です"
+        // TODO: ViewModelを呼び出したい.
+        missionFirstKana = getRandomHiragana()
+        mapsBinding.themeText.text = "今のお題は「$missionFirstKana」です"
     }
 
-    fun locationGetAndCheck(locaton: Location) {
+    fun toastLocation(locaton: Location) {
         location.showLocation()
     }
 

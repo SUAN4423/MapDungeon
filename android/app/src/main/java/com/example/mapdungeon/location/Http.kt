@@ -3,16 +3,17 @@ package com.example.mapdungeon.location
 import android.os.AsyncTask
 import android.util.Log
 import android.util.Xml
-import com.example.mapdungeon.cityname.AddressMap
-import com.example.mapdungeon.cityname.Hiragana
+import com.example.mapdungeon.cityname.Address
+import com.example.mapdungeon.cityname.missionFirstKana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
-    public fun getAddressName(dataset: HttpRequesetDataset): HttpRequesetDataset? {
+class Http : AsyncTask<HttpRequestDataset, Void, HttpRequestDataset>() {
+    var address: Address? = null
+    fun getAddressName(dataset: HttpRequestDataset): HttpRequestDataset? {
         var con: HttpURLConnection;
         try {
             val url: URL =
@@ -26,13 +27,13 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
             con.connect()
 
             val input: InputStream = con.inputStream
-            val address: AddressMap? = parseResXml(input)
-            Hiragana.addressMap = address
-//            Log.d("debug", address + " debug")
+            val address = parseResXml(input)
             input.close()
+
+            this.address = address
+
             if (address != null) {
                 dataset.setCityName(address.prefecture + address.city + address.town)
-//                return address["prefecture"] + address["city"] + address["town"]
             }
             return dataset
         } catch (e: Exception) {
@@ -41,7 +42,7 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
         return null
     }
 
-    private fun parseResXml(input: InputStream): AddressMap? {
+    private fun parseResXml(input: InputStream): Address? {
         try {
             val parser: XmlPullParser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
@@ -52,7 +53,12 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
             var eventType: Int = parser.eventType;
 //            Log.d("debug", "${eventType != XmlPullParser.END_DOCUMENT}")
 
-            var prefecture = ""; var city = ""; var city_kana = ""; var town = ""; var town_kana = ""; var postal = ""
+            var prefecture = "";
+            var city = "";
+            var cityKana = "";
+            var town = "";
+            var townKana = "";
+            var postal = ""
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 val name: String? = parser.name
 //                Log.d("debug", "${name} ${eventType}")
@@ -61,11 +67,11 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
                         if ("city" == name) {
                             city = parser.nextText()
                         } else if ("city-kana" == name) {
-                            city_kana = parser.nextText()
+                            cityKana = parser.nextText()
                         } else if ("town" == name) {
                             town = parser.nextText()
                         } else if ("town-kana" == name) {
-                            town_kana = parser.nextText()
+                            townKana = parser.nextText()
                         } else if ("prefecture" == name) {
                             prefecture = parser.nextText()
                         } else if ("postal" == name) {
@@ -84,29 +90,31 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
                 eventType = parser.next()
             }
             isUsed = false
-            val address = AddressMap(prefecture, city, city_kana, town, town_kana, postal)
-            return address //address["prefecture"] + address["city"] + address["town"]
+
+            return Address(prefecture, city, cityKana, town, townKana, postal)
         } catch (e: Exception) {
             Log.d("error", e.stackTraceToString())
         }
         return null
     }
 
-    override fun doInBackground(vararg params: HttpRequesetDataset?): HttpRequesetDataset? {
+    override fun doInBackground(vararg params: HttpRequestDataset?): HttpRequestDataset? {
         return getAddressName(params[0]!!)
     }
 
-    override fun onPostExecute(result: HttpRequesetDataset?) {
+    override fun onPostExecute(result: HttpRequestDataset?) {
         if (result!!.getBinding() != null) { // NOTE: 画面更新処理
             if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
-                val successCity: Boolean = Hiragana.checkLocation()
-                if (successCity)
-                    (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getNowMission()}」から始まる\n市区町村に\n到着しました！"
-                else if (Hiragana.getFirstKana() != null)
-                    (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getNowMission()}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
-                (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
+                (result.getBinding() as ActivityJudgeBinding).judgeText.text =
+                    if (address?.firstKana == missionFirstKana) {
+                        // TODO: use ViewModel
+                        "「${missionFirstKana}」から始まる\n市区町村に\n到着しました！"
+                    } else {
+                        // TODO: use ViewModel
+                        "「${missionFirstKana}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${address?.firstKana ?: '?'}"
+                    }
+
+                (result.getBinding() as ActivityJudgeBinding).cityText.text = address?.str ?: "住所不明"
             }
         }
     }

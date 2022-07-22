@@ -33,7 +33,7 @@ class JudgeActivity : AppCompatActivity() {
 //                "現在位置が取得されていません"
 
         val task = Http()
-        val dataset: HttpRequesetDataset = HttpRequesetDataset(latitude, longitude, this, judgeBinding)
+        val dataset: HttpRequestDataset = HttpRequestDataset(latitude, longitude, this, judgeBinding)
         task.execute(dataset)
 
         judgeBinding.returnButton.setOnClickListener {

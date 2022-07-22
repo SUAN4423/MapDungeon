@@ -3,7 +3,7 @@ package com.example.mapdungeon.location
 import android.app.Activity
 import androidx.viewbinding.ViewBinding
 
-class HttpRequesetDataset(
+class HttpRequestDataset(
     latitude: Double,
     longitude: Double,
     activity: Activity?,
