@@ -1,7 +1,6 @@
 package com.example.mapdungeon.cityname
 
 import android.content.res.AssetManager
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -10,11 +9,11 @@ import java.lang.Integer.max
 
 class Hiragana {
     companion object {
-        private var missionChar: Char = 'あ'
+        private var missionChars: MutableList<Char> = mutableListOf('あ','あ','あ','あ','あ','あ','あ','あ')
         public var addressMap: AddressMap? = null
 
         public fun setRandomHiragana() {
-            missionChar = getRandomHiragana()
+            missionChars.replaceAll { getRandomHiragana() }
         }
 
         private fun getRandomHiragana(): Char { // TODO: ひらがなにはあるが、それから始まる日本の都市がない場合その都市の建設(例: "ん"から始まる都市)
@@ -38,8 +37,8 @@ class Hiragana {
             return retChar
         }
 
-        public fun getCurrentMission(): Char {
-            return missionChar
+        public fun getCurrentMission(): MutableList<Char> {
+            return missionChars
         }
 
         public fun getCityName(): String {
@@ -142,7 +141,7 @@ class Hiragana {
         }
 
         //        public fun checkLocation(activity: Activity, mapsBinding: ActivityMapsBinding):Boolean {
-        public fun checkLocation(activity: AppCompatActivity): Boolean {
+        public fun checkLocation(activity: AppCompatActivity): Pair<Boolean, Char?> {
             if (addressMap != null) {
                 var firstKana: Char? = null
                 firstKana = getFirstKana(activity)
@@ -151,9 +150,9 @@ class Hiragana {
 //                    activity,
 //                    "${firstKana!!} ${cityKana}", Toast.LENGTH_LONG
 //                ).show()
-                return firstKana!! == missionChar
+                return (firstKana in missionChars) to firstKana
             }
-            return false
+            return false to null
         }
     }
 }

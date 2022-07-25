@@ -65,7 +65,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 //        }
 
         Hiragana.setRandomHiragana();
-        mapsBinding.themeText.text = "今のお題は「" + Hiragana.getCurrentMission() + "」です"
+        val currentMission = Hiragana.getCurrentMission()
+        var missionString = ""
+        currentMission.forEach { kana -> missionString += "$kana," }
+        mapsBinding.themeText.text = "今のお題は「$missionString」です"
     }
 
     fun locationGetAndCheck(locaton: Location) {

@@ -100,13 +100,13 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
     override fun onPostExecute(result: HttpRequesetDataset?) {
         if (result!!.getBinding() != null) { // NOTE: 画面更新処理
             if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
-                val successCity: Boolean = Hiragana.checkLocation(result.getActivity() as AppCompatActivity)
-                if (successCity)
+                val (isSuccess, cityKana) = Hiragana.checkLocation(result.getActivity() as AppCompatActivity)
+                if (isSuccess)
                     (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getCurrentMission()}」の付く市区町村に\n到着しました！"
+                        "「${cityKana}」の付く市区町村に\n到着しました！"
                 else if (Hiragana.getFirstKana(result.getActivity() as AppCompatActivity) != null)
                     (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getCurrentMission()}」の付く市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana(result.getActivity() as AppCompatActivity)!!}"
+                        "お題に沿った市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana(result.getActivity() as AppCompatActivity)!!}"
                 (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
             }
         }
