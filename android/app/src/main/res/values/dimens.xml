@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="magic_square_width">44dp</dimen>
+    <dimen name="magic_square_height">44dp</dimen>
+    <dimen name="magic_square_text_size">28sp</dimen>
+</resources>

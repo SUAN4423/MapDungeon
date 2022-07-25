@@ -10,18 +10,105 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:layout_margin="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/map"
-        android:text="今のお題は「あ」です" />
+        app:layout_constraintBottom_toTopOf="@id/mission_magic_square"
+        android:text="お題" />
+
+    <GridLayout
+        android:id="@+id/mission_magic_square"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_horizontal"
+        android:columnCount="3"
+        android:rowCount="3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/theme_text"
+        app:layout_constraintBottom_toTopOf="@id/map">
+        <TextView
+            android:id="@+id/mission0"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/clear"
+            android:gravity="center"
+            android:text="あ" />
+        <TextView
+            android:id="@+id/mission1"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/unclear"
+            android:gravity="center"
+            android:text="い" />
+        <TextView
+            android:id="@+id/mission2"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/align"
+            android:gravity="center"
+            android:text="う" />
+        <TextView
+            android:id="@+id/mission3"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/unclear"
+            android:gravity="center"
+            android:text="え" />
+        <TextView
+            android:id="@+id/mission_center"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/align"
+            android:gravity="center"
+            android:text="*" />
+        <TextView
+            android:id="@+id/mission4"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/unclear"
+            android:gravity="center"
+            android:text="か" />
+        <TextView
+            android:id="@+id/mission5"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/align"
+            android:gravity="center"
+            android:text="き" />
+        <TextView
+            android:id="@+id/mission6"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/unclear"
+            android:gravity="center"
+            android:text="く" />
+        <TextView
+            android:id="@+id/mission7"
+            android:width="@dimen/magic_square_width"
+            android:layout_height="@dimen/magic_square_height"
+            android:textSize="@dimen/magic_square_text_size"
+            android:background="@color/unclear"
+            android:gravity="center"
+            android:text="け" />
+    </GridLayout>
 
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        map:layout_constraintTop_toBottomOf="@id/theme_text"
+        map:layout_constraintTop_toBottomOf="@id/mission_magic_square"
         map:layout_constraintBottom_toBottomOf="@id/judge_button"
         tools:context=".MapsActivity" />
 
