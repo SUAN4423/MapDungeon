@@ -1,6 +1,6 @@
 package com.example.mapdungeon.cityname
 
-class Topofhiragana {
+class HiraganaData {
     companion object {
         val hiraganaPercent: Array<Pair<Char, Int>> = arrayOf(
             Pair('あ', 106),

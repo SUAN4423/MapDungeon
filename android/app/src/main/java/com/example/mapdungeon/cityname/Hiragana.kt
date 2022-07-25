@@ -1,14 +1,20 @@
 package com.example.mapdungeon.cityname
 
+import android.content.res.AssetManager
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import kotlin.random.Random
+import java.lang.Integer.max
 
 class Hiragana {
     companion object {
-        private var locateChar: Char = 'あ'
+        private var missionChar: Char = 'あ'
         public var addressMap: AddressMap? = null
 
         public fun setRandomHiragana() {
-            locateChar = getRandomHiragana()
+            missionChar = getRandomHiragana()
         }
 
         private fun getRandomHiragana(): Char { // TODO: ひらがなにはあるが、それから始まる日本の都市がない場合その都市の建設(例: "ん"から始まる都市)
@@ -16,12 +22,12 @@ class Hiragana {
 //            var retChar: Char = 'ぁ' + randomInt
             var retChar: Char = '*'
             var randomSum: Int = 0
-            Topofhiragana.hiraganaPercent.forEach {
+            HiraganaData.hiraganaPercent.forEach {
                 randomSum += it.second
             }
             val randomInt: Int = Random.nextInt(randomSum)
             var sum: Int = 0
-            Topofhiragana.hiraganaPercent.forEach {
+            HiraganaData.hiraganaPercent.forEach {
                 if (retChar == '*') {
                     sum += it.second
                     if (randomInt < sum) {
@@ -32,8 +38,8 @@ class Hiragana {
             return retChar
         }
 
-        public fun getNowMission(): Char {
-            return locateChar
+        public fun getCurrentMission(): Char {
+            return missionChar
         }
 
         public fun getCityName(): String {
@@ -44,22 +50,72 @@ class Hiragana {
             }
         }
 
-        public fun getFirstKana(): Char? {
-            val city: String? = addressMap!!.city
-            val cityKana: String? = addressMap!!.city_kana
-            val town: String? = addressMap!!.town
-            val townKana: String? = addressMap!!.town_kana
-            var firstKana: Char? = null
-            if (city != null && cityKana != null && town != null && townKana != null) {
-                if (city == "郡上市" || city == "蒲郡市") { //○○郡××としたいときの例外処理
-                    firstKana = cityKana[0]
-                } else if (city.indexOf("郡") >= 0) { //○○郡××
-                    val indexOfGUN = cityKana.indexOf("ぐん") + 2
-                    firstKana = cityKana[indexOfGUN]
-                } else { //○○市
-                    firstKana = cityKana[0]
+        private fun longestMatch(s: String, t: String): Pair<Int,Int> {
+            //sのprefixとtの部分文字列との最長マッチ
+            //2つ目の情報はマッチ数が一致したときになるべく短い文字を採用するためのもの
+            val sLen = s.length
+            val tLen = t.length
+            var longest = 0
+            for(i in 0 until tLen){
+                for(j in 0 until sLen){
+                    if(i+j >= tLen) break
+                    if(s[j] == t[i+j]) longest = max(longest, j+1)
+                    else break
                 }
             }
+            return Pair<Int,Int>(longest, -sLen-tLen)
+//            編集距離はうまくいかなさそう
+//            var dp = Array(sLen+1) { IntArray(tLen+1) }
+//            for(i in 0 until sLen+1){
+//                for(j in 0 until tLen+1){
+//                    dp[i][j] = 998244353
+//                }
+//            }
+//            for(i in 0 until sLen+1) dp[i][0] = i
+//            for(j in 0 until tLen+1) dp[0][j] = j
+//            for(i in 0 until sLen+1){
+//                for(j in 0 until tLen+1){
+//                    if(i > 0) dp[i][j] = min(dp[i][j], dp[i-1][j] + 1)
+//                    if(j > 0) dp[i][j] = min(dp[i][j], dp[i][j-1] + 1)
+//                    if(i > 0 && j > 0){
+//                        var isNotSame : Int = 0
+//                        if(s[i-1] != t[j-1]) isNotSame = 1
+//                        dp[i][j] = min(dp[i][j], dp[i-1][j-1] + isNotSame)
+//                    }
+//                }
+//            }
+//            return dp[sLen][tLen]
+        }
+
+        public fun getFirstKana(activity: AppCompatActivity): Char? {
+            var firstKana: Char? = null
+            val assetManager : AssetManager = activity.resources.assets
+            val file = assetManager.open("townname.csv")
+            val fileReader = BufferedReader(InputStreamReader(file, "MS932"))
+            var longest = Pair<Int,Int>(0,0)
+            val placeString = addressMap!!.city + addressMap!!.town
+            var debugString = ""
+            fileReader.forEachLine {
+                var column = it.split(",").toTypedArray()
+                var tableString = ""
+                //「支庁」、「振興局」があると厄介なので該当箇所を消す
+                if(column[2].indexOf("支庁") == -1 && column[2].indexOf("振興局") == -1){
+                    tableString = (column[2] + column[4]).replace("\"","")
+                }else{
+                    tableString = column[4].replace("\"","")
+                }
+                val res = longestMatch(tableString, placeString) //CSV上のprefix、APIで取ったものの部分文字列
+                if(res.first > longest.first || res.first == longest.first && res.second > longest.second){
+                    firstKana = column[5][1]
+                    longest = res
+                    debugString = tableString
+                }
+            }
+//            Log.d("debug", "max : ${longest}")
+//            Log.d("debug", "match : ${longestMatch(debugString,placeString).first}")
+//            Log.d("debug", "dS : ${debugString}")
+//            Log.d("debug", "pS : ${placeString}")
+//            Log.d("debug", "fi : ${firstKana}")
             when (firstKana) {
                 'が' -> firstKana = 'か'
                 'ぎ' -> firstKana = 'き'
@@ -86,16 +142,16 @@ class Hiragana {
         }
 
         //        public fun checkLocation(activity: Activity, mapsBinding: ActivityMapsBinding):Boolean {
-        public fun checkLocation(): Boolean {
+        public fun checkLocation(activity: AppCompatActivity): Boolean {
             if (addressMap != null) {
                 var firstKana: Char? = null
-                firstKana = getFirstKana()
+                firstKana = getFirstKana(activity)
 //                Log.d("debug", firstKana!! + " " + cityKana)
 //                Toast.makeText(
 //                    activity,
 //                    "${firstKana!!} ${cityKana}", Toast.LENGTH_LONG
 //                ).show()
-                return firstKana!! == locateChar
+                return firstKana!! == missionChar
             }
             return false
         }

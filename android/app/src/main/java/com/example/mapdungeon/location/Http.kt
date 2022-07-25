@@ -3,6 +3,7 @@ package com.example.mapdungeon.location
 import android.os.AsyncTask
 import android.util.Log
 import android.util.Xml
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mapdungeon.cityname.AddressMap
 import com.example.mapdungeon.cityname.Hiragana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
@@ -99,13 +100,13 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
     override fun onPostExecute(result: HttpRequesetDataset?) {
         if (result!!.getBinding() != null) { // NOTE: 画面更新処理
             if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
-                val successCity: Boolean = Hiragana.checkLocation()
+                val successCity: Boolean = Hiragana.checkLocation(result.getActivity() as AppCompatActivity)
                 if (successCity)
                     (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getNowMission()}」から始まる\n市区町村に\n到着しました！"
-                else if (Hiragana.getFirstKana() != null)
+                        "「${Hiragana.getCurrentMission()}」の付く市区町村に\n到着しました！"
+                else if (Hiragana.getFirstKana(result.getActivity() as AppCompatActivity) != null)
                     (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${Hiragana.getNowMission()}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana()!!}"
+                        "「${Hiragana.getCurrentMission()}」の付く市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana(result.getActivity() as AppCompatActivity)!!}"
                 (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
             }
         }
