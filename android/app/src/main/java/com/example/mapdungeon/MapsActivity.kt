@@ -49,10 +49,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         val launcher: ActivityResultLauncher<Intent> = prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             val isClearList = Hiragana.getCurrentClear()
 
-            for((index, isClear) in isClearList.withIndex()) {
-                if(isClear) {
+            for ((index, isClear) in isClearList.withIndex()) {
+                if (isClear) {
                     missionTextViews[index].setBackgroundColor(resources.getColor(R.color.clear))
                 }
+
+                val isBingo = bingoCheck(isClearList)
             }
         }
 
@@ -86,8 +88,105 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     fun locationGetAndCheck(locaton: Location) {
         location.showLocation()
+    }
+
+    fun bingoCheck(isClearList: MutableList<Boolean>):Boolean {
+        var isBingo: Boolean = false
+        /*
+         * * *
+         - - -
+         - - -
+         */
+        if (isClearList[0] && isClearList[1] && isClearList[2]) {
+            mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission1.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         - - -
+         * * *
+         - - -
+         */
+        if (isClearList[3] && isClearList[4]) {
+            mapsBinding.mission3.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission4.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         - - -
+         - - -
+         * * *
+         */
+        if (isClearList[5] && isClearList[6] && isClearList[7]) {
+            mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission6.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         * - -
+         * - -
+         * - -
+         */
+        if (isClearList[0] && isClearList[3] && isClearList[5]) {
+            mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission3.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         - * -
+         - * -
+         - * -
+         */
+        if (isClearList[1] && isClearList[6]) {
+            mapsBinding.mission1.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission6.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         - - *
+         - - *
+         - - *
+         */
+        if (isClearList[2] && isClearList[4] && isClearList[7]) {
+            mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission4.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         * - -
+         - * -
+         - - *
+         */
+        if (isClearList[0] && isClearList[7]) {
+            mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        /*
+         - - *
+         - * -
+         * - -
+         */
+        if (isClearList[2] && isClearList[5]) {
+            mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
+            mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
+        }
+        return isBingo
     }
 
     /**
