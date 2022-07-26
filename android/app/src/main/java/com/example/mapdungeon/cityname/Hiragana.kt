@@ -10,10 +10,12 @@ import java.lang.Integer.max
 class Hiragana {
     companion object {
         private var missionChars: MutableList<Char> = mutableListOf('あ','あ','あ','あ','あ','あ','あ','あ')
+        private var isClearList: MutableList<Boolean> = mutableListOf(false, false, false, false, false, false, false, false)
         public var addressMap: AddressMap? = null
 
         public fun setRandomHiragana() {
             missionChars.replaceAll { getRandomHiragana() }
+            isClearList.replaceAll { false }
         }
 
         private fun getRandomHiragana(): Char { // TODO: ひらがなにはあるが、それから始まる日本の都市がない場合その都市の建設(例: "ん"から始まる都市)
@@ -39,6 +41,10 @@ class Hiragana {
 
         public fun getCurrentMission(): MutableList<Char> {
             return missionChars
+        }
+
+        public fun getCurrentClear(): MutableList<Boolean> {
+            return isClearList
         }
 
         public fun getCityName(): String {
@@ -143,13 +149,10 @@ class Hiragana {
         //        public fun checkLocation(activity: Activity, mapsBinding: ActivityMapsBinding):Boolean {
         public fun checkLocation(activity: AppCompatActivity): Pair<Boolean, Char?> {
             if (addressMap != null) {
-                var firstKana: Char? = null
-                firstKana = getFirstKana(activity)
-//                Log.d("debug", firstKana!! + " " + cityKana)
-//                Toast.makeText(
-//                    activity,
-//                    "${firstKana!!} ${cityKana}", Toast.LENGTH_LONG
-//                ).show()
+                val firstKana: Char? = getFirstKana(activity)
+                val clearIndex = missionChars.indexOf(firstKana)
+                if(clearIndex >= 0) isClearList[clearIndex] = true
+
                 return (firstKana in missionChars) to firstKana
             }
             return false to null
