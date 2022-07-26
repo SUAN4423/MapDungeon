@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -41,6 +43,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         val view = mapsBinding.root
         setContentView(view)
 
+        val launcher: ActivityResultLauncher<Intent> = prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            val isClearList = Hiragana.getCurrentClear()
+
+            for((index, isClear) in isClearList.withIndex()) {
+                if(isClear) {
+                    when(index){
+                        0 -> mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.clear))
+                        1 -> mapsBinding.mission1.setBackgroundColor(resources.getColor(R.color.clear))
+                        2 -> mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.clear))
+                        3 -> mapsBinding.mission3.setBackgroundColor(resources.getColor(R.color.clear))
+                        4 -> mapsBinding.mission4.setBackgroundColor(resources.getColor(R.color.clear))
+                        5 -> mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.clear))
+                        6 -> mapsBinding.mission6.setBackgroundColor(resources.getColor(R.color.clear))
+                        7 -> mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.clear))
+                    }
+                }
+            }
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -58,7 +79,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                 putExtra(EXTRA_LATITUDE, location.latitude)
                 putExtra(EXTRA_LONGITUDE, location.longitude)
             }
-            startActivity(intent)
+            launcher.launch(intent)
         }
 //        mapsBinding.judgeButton.setOnClickListener {
 //            checkLocation(this, mapsBinding)

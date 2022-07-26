@@ -34,7 +34,7 @@
             android:width="@dimen/magic_square_width"
             android:layout_height="@dimen/magic_square_height"
             android:textSize="@dimen/magic_square_text_size"
-            android:background="@color/clear"
+            android:background="@color/unclear"
             android:gravity="center"
             android:text="あ" />
         <TextView
@@ -50,7 +50,7 @@
             android:width="@dimen/magic_square_width"
             android:layout_height="@dimen/magic_square_height"
             android:textSize="@dimen/magic_square_text_size"
-            android:background="@color/align"
+            android:background="@color/unclear"
             android:gravity="center"
             android:text="う" />
         <TextView
@@ -66,7 +66,7 @@
             android:width="@dimen/magic_square_width"
             android:layout_height="@dimen/magic_square_height"
             android:textSize="@dimen/magic_square_text_size"
-            android:background="@color/align"
+            android:background="@color/clear"
             android:gravity="center"
             android:text="*" />
         <TextView
@@ -82,7 +82,7 @@
             android:width="@dimen/magic_square_width"
             android:layout_height="@dimen/magic_square_height"
             android:textSize="@dimen/magic_square_text_size"
-            android:background="@color/align"
+            android:background="@color/unclear"
             android:gravity="center"
             android:text="き" />
         <TextView
