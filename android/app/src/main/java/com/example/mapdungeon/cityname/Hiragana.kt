@@ -9,12 +9,21 @@ import java.lang.Integer.max
 
 class Hiragana {
     companion object {
-        private var missionChars: MutableList<Char> = mutableListOf('あ','あ','あ','あ','あ','あ','あ','あ')
+        private var missionChars = mutableListOf<Char>()
         private var isClearList: MutableList<Boolean> = mutableListOf(false, false, false, false, false, false, false, false)
         public var addressMap: AddressMap? = null
 
         public fun setRandomHiragana() {
-            missionChars.replaceAll { getRandomHiragana() }
+            val chars = mutableListOf<Char>()
+            while(chars.size < 8){
+                val selectedChar = getRandomHiragana()
+                var isDistinct = true
+                chars.forEach({
+                    if(it == selectedChar) isDistinct = false
+                })
+                if(isDistinct) chars.add(selectedChar)
+            }
+            missionChars = chars.shuffled().toMutableList()
             isClearList.replaceAll { false }
         }
 
@@ -69,27 +78,6 @@ class Hiragana {
                 }
             }
             return Pair<Int,Int>(longest, -sLen-tLen)
-//            編集距離はうまくいかなさそう
-//            var dp = Array(sLen+1) { IntArray(tLen+1) }
-//            for(i in 0 until sLen+1){
-//                for(j in 0 until tLen+1){
-//                    dp[i][j] = 998244353
-//                }
-//            }
-//            for(i in 0 until sLen+1) dp[i][0] = i
-//            for(j in 0 until tLen+1) dp[0][j] = j
-//            for(i in 0 until sLen+1){
-//                for(j in 0 until tLen+1){
-//                    if(i > 0) dp[i][j] = min(dp[i][j], dp[i-1][j] + 1)
-//                    if(j > 0) dp[i][j] = min(dp[i][j], dp[i][j-1] + 1)
-//                    if(i > 0 && j > 0){
-//                        var isNotSame : Int = 0
-//                        if(s[i-1] != t[j-1]) isNotSame = 1
-//                        dp[i][j] = min(dp[i][j], dp[i-1][j-1] + isNotSame)
-//                    }
-//                }
-//            }
-//            return dp[sLen][tLen]
         }
 
         public fun getFirstKana(activity: AppCompatActivity): Char? {
