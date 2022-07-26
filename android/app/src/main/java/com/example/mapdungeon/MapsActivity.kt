@@ -62,7 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                     }
                 }
 
-                bingoCheck(isClearList)
+                val isBingo = bingoCheck(isClearList)
             }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -108,7 +108,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         location.showLocation()
     }
 
-    fun bingoCheck(isClearList: MutableList<Boolean>) {
+    fun bingoCheck(isClearList: MutableList<Boolean>):Boolean {
+        var isBingo: Boolean = false
         /*
          * * *
          - - -
@@ -118,6 +119,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission1.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          - - -
@@ -128,6 +130,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission3.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission4.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          - - -
@@ -138,6 +141,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission6.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          * - -
@@ -148,6 +152,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission3.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          - * -
@@ -158,6 +163,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission1.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission6.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          - - *
@@ -168,6 +174,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission4.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          * - -
@@ -178,6 +185,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
         /*
          - - *
@@ -188,7 +196,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.bingo))
             mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.bingo))
+            isBingo = true
         }
+        return isBingo
     }
 
     /**
