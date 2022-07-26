@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -43,21 +44,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         val view = mapsBinding.root
         setContentView(view)
 
+        val missionTextViews: MutableList<TextView> = mutableListOf(mapsBinding.mission0, mapsBinding.mission1, mapsBinding.mission2, mapsBinding.mission3, mapsBinding.mission4, mapsBinding.mission5, mapsBinding.mission6, mapsBinding.mission7)
+
         val launcher: ActivityResultLauncher<Intent> = prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             val isClearList = Hiragana.getCurrentClear()
 
             for((index, isClear) in isClearList.withIndex()) {
                 if(isClear) {
-                    when(index){
-                        0 -> mapsBinding.mission0.setBackgroundColor(resources.getColor(R.color.clear))
-                        1 -> mapsBinding.mission1.setBackgroundColor(resources.getColor(R.color.clear))
-                        2 -> mapsBinding.mission2.setBackgroundColor(resources.getColor(R.color.clear))
-                        3 -> mapsBinding.mission3.setBackgroundColor(resources.getColor(R.color.clear))
-                        4 -> mapsBinding.mission4.setBackgroundColor(resources.getColor(R.color.clear))
-                        5 -> mapsBinding.mission5.setBackgroundColor(resources.getColor(R.color.clear))
-                        6 -> mapsBinding.mission6.setBackgroundColor(resources.getColor(R.color.clear))
-                        7 -> mapsBinding.mission7.setBackgroundColor(resources.getColor(R.color.clear))
-                    }
+                    missionTextViews[index].setBackgroundColor(resources.getColor(R.color.clear))
                 }
             }
         }
@@ -85,16 +79,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 //            checkLocation(this, mapsBinding)
 //        }
 
-        Hiragana.setRandomHiragana();
+        Hiragana.setRandomHiragana()
         val currentMission = Hiragana.getCurrentMission()
-        mapsBinding.mission0.text = currentMission[0].toString()
-        mapsBinding.mission1.text = currentMission[1].toString()
-        mapsBinding.mission2.text = currentMission[2].toString()
-        mapsBinding.mission3.text = currentMission[3].toString()
-        mapsBinding.mission4.text = currentMission[4].toString()
-        mapsBinding.mission5.text = currentMission[5].toString()
-        mapsBinding.mission6.text = currentMission[6].toString()
-        mapsBinding.mission7.text = currentMission[7].toString()
+        for ((index, mission) in missionTextViews.withIndex()) {
+            mission.text = currentMission[index].toString()
+        }
     }
 
     fun locationGetAndCheck(locaton: Location) {
