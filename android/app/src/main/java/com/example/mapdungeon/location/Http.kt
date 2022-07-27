@@ -28,7 +28,6 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
 
             val input: InputStream = con.inputStream
             val address: AddressMap? = parseResXml(input)
-            Hiragana.addressMap = address
 //            Log.d("debug", address + " debug")
             input.close()
             if (address != null) {
@@ -99,16 +98,6 @@ class Http : AsyncTask<HttpRequesetDataset, Void, HttpRequesetDataset>() {
 
     override fun onPostExecute(result: HttpRequesetDataset?) {
         if (result!!.getBinding() != null) { // NOTE: 画面更新処理
-            if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
-                val (isSuccess, cityKana) = Hiragana.checkLocation(result.getActivity() as AppCompatActivity)
-                if (isSuccess)
-                    (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "「${cityKana}」の付く市区町村に\n到着しました！"
-                else if (Hiragana.getFirstKana(result.getActivity() as AppCompatActivity) != null)
-                    (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                        "お題に沿った市区町村に\n到着していません\n現在の頭文字: ${Hiragana.getFirstKana(result.getActivity() as AppCompatActivity)!!}"
-                (result.getBinding() as ActivityJudgeBinding).cityText.text = Hiragana.getCityName()
-            }
         }
     }
 }
