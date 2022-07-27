@@ -14,10 +14,12 @@ data class Bingo(
         return missions.map { it.isClear }
 //        return List(8){missions[it].isClear}
     }
+    fun getMissionCharsList(): List<Char> {
+        return missions.map { it.missionChar }
+    }
 }
 
 fun genBingo(): Bingo {
-    Hiragana.setRandomHiragana()
-    val missionChars = Hiragana.getCurrentMission()
+    val missionChars = Hiragana.setRandomHiragana()
     return Bingo(Array(8) { Mission(missionChars[it]) })
 }
