@@ -31,6 +31,7 @@ import com.example.mapdungeon.model.genBingo
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissionsResultCallback {
 
@@ -69,6 +70,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                 }
 
                 val isBingo = bingoCheck(isClearList)
+
+                if (isBingo) {
+                    GlobalData.bingo.clearedAt = Date()
+                }
             }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

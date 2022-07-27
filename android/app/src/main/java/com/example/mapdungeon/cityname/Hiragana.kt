@@ -7,6 +7,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.random.Random
 import java.lang.Integer.max
+import java.util.*
 
 class Hiragana {
     companion object {
@@ -147,8 +148,11 @@ class Hiragana {
                 val firstKana: Char? = getFirstKana(activity)
                 val missionChar = GlobalData.bingo.getMissionCharsList()
                 val clearIndex = missionChar.indexOf(firstKana)
-                if (clearIndex >= 0) //isClearList[clearIndex] = true
+                if (clearIndex >= 0) { //isClearList[clearIndex] = true
                     GlobalData.bingo.missions[clearIndex].isClear = true
+                    GlobalData.bingo.missions[clearIndex].clearedAt = Date()
+                    GlobalData.bingo.missions[clearIndex].address = addressMap!!.copy()
+                }
 
                 return (firstKana in missionChar) to firstKana
             }
