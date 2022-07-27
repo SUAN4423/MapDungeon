@@ -3,9 +3,12 @@ package com.example.mapdungeon.location
 import android.os.AsyncTask
 import android.util.Log
 import android.util.Xml
-import com.example.mapdungeon.cityname.Address
+import com.example.mapdungeon.model.Address
 import com.example.mapdungeon.cityname.missionFirstKana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
+import com.example.mapdungeon.util.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParser
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -42,13 +45,64 @@ class Http : AsyncTask<HttpRequestDataset, Void, HttpRequestDataset>() {
         return null
     }
 
-    private fun parseResXml(input: InputStream): Address? {
+
+    override fun doInBackground(vararg params: HttpRequestDataset?): HttpRequestDataset? {
+        return getAddressName(params[0]!!)
+    }
+
+    override fun onPostExecute(result: HttpRequestDataset?) {
+        if (result!!.getBinding() != null) { // NOTE: 画面更新処理
+            if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
+                (result.getBinding() as ActivityJudgeBinding).judgeText.text =
+                    if (address?.firstKana == missionFirstKana) {
+                        // TODO: use ViewModel
+                        "「${missionFirstKana}」から始まる\n市区町村に\n到着しました！"
+                    } else {
+                        // TODO: use ViewModel
+                        "「${missionFirstKana}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${address?.firstKana ?: '?'}"
+                    }
+
+                (result.getBinding() as ActivityJudgeBinding).cityText.text = address?.str ?: "住所不明"
+            }
+        }
+    }
+}
+
+
+
+class AddressAPIRepository {
+    suspend fun getAddress(
+        latitude: Double,
+        longitude: Double
+    ): Result<Address> {
+        return withContext(Dispatchers.IO) {
+            val url =
+                URL("http://geoapi.heartrails.com/api/xml?method=searchByGeoLocation&x=${latitude}&y=${longitude}")
+            val con = url.openConnection() as HttpURLConnection
+            con.requestMethod = "GET"
+            con.instanceFollowRedirects = false
+            con.doInput = true
+            con.connectTimeout = 100000
+            val input: InputStream = con.inputStream
+
+            try {
+                con.connect()
+                return@withContext Result.Success(parseResXml(input))
+            } catch (e: java.lang.Exception) {
+                return@withContext Result.Error(e)
+            } finally {
+                input.close()
+            }
+        }
+    }
+
+    private fun parseResXml(input: InputStream): Address {
         try {
             val parser: XmlPullParser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
             parser.setInput(input, "UTF-8")
 
-            var isLast: Boolean = false
+            var isLast = false
 
             var eventType: Int = parser.eventType;
 //            Log.d("debug", "${eventType != XmlPullParser.END_DOCUMENT}")
@@ -94,28 +148,7 @@ class Http : AsyncTask<HttpRequestDataset, Void, HttpRequestDataset>() {
             return Address(prefecture, city, cityKana, town, townKana, postal)
         } catch (e: Exception) {
             Log.d("error", e.stackTraceToString())
-        }
-        return null
-    }
-
-    override fun doInBackground(vararg params: HttpRequestDataset?): HttpRequestDataset? {
-        return getAddressName(params[0]!!)
-    }
-
-    override fun onPostExecute(result: HttpRequestDataset?) {
-        if (result!!.getBinding() != null) { // NOTE: 画面更新処理
-            if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
-                (result.getBinding() as ActivityJudgeBinding).judgeText.text =
-                    if (address?.firstKana == missionFirstKana) {
-                        // TODO: use ViewModel
-                        "「${missionFirstKana}」から始まる\n市区町村に\n到着しました！"
-                    } else {
-                        // TODO: use ViewModel
-                        "「${missionFirstKana}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${address?.firstKana ?: '?'}"
-                    }
-
-                (result.getBinding() as ActivityJudgeBinding).cityText.text = address?.str ?: "住所不明"
-            }
+            throw e
         }
     }
 }

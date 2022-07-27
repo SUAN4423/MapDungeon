@@ -177,7 +177,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         val builder = AlertDialog.Builder(this)
         builder.setTitle("エラー")
             .setMessage(errorMessage)
-        builder.setPositiveButton("OK") { dialogInterface, i ->
+ q       builder.setPositiveButton("OK") { dialogInterface, i ->
             this.finish()
         }
     }

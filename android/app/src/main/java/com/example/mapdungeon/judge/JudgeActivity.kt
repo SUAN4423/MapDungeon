@@ -2,6 +2,9 @@ package com.example.mapdungeon.judge
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.mapdungeon.MissionViewModel
+import com.example.mapdungeon.cityname.missionFirstKana
 import com.example.mapdungeon.databinding.ActivityJudgeBinding
 import com.example.mapdungeon.location.*
 
@@ -32,9 +35,23 @@ class JudgeActivity : AppCompatActivity() {
 //            judgeBinding.judgeText.text =
 //                "現在位置が取得されていません"
 
-        val task = Http()
-        val dataset: HttpRequestDataset = HttpRequestDataset(latitude, longitude, this, judgeBinding)
-        task.execute(dataset)
+        val model = ViewModelProvider(this)[MissionViewModel::class.java]
+        val ok = model.judge(longitude, latitude)
+
+            if (result!!.getBinding() != null) { // NOTE: 画面更新処理
+                if (result.getBinding() is ActivityJudgeBinding) { // NOTE: JudgeActivityの画面更新処理
+                    judgeBinding.judgeText.text =
+                        if (address?.firstKana == missionFirstKana) {
+                            // TODO: use ViewModel
+                            "「${missionFirstKana}」から始まる\n市区町村に\n到着しました！"
+                        } else {
+                            // TODO: use ViewModel
+                            "「${missionFirstKana}」から始まる\n市区町村に\n到着していません\n現在の頭文字: ${address?.firstKana ?: '?'}"
+                        }
+
+                    judgeBinding.cityText.text = address?.str ?: "住所不明"
+                }
+            }
 
         judgeBinding.returnButton.setOnClickListener {
             finish()

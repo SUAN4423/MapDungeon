@@ -1,4 +1,4 @@
-package com.example.mapdungeon.cityname
+package com.example.mapdungeon.model
 
 class Topofhiragana {
     companion object {

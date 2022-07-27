@@ -1,6 +1,6 @@
-package com.example.mapdungeon.cityname
+package com.example.mapdungeon.model
 
-class Address(
+data class Address(
     val prefecture: String,
     val city: String,
     val cityKana: String,
