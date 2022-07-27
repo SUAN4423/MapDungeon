@@ -24,6 +24,8 @@ import com.example.mapdungeon.judge.JudgeActivity
 import com.example.mapdungeon.location.EXTRA_LATITUDE
 import com.example.mapdungeon.location.EXTRA_LONGITUDE
 import com.example.mapdungeon.location.Location
+import com.example.mapdungeon.model.Bingo
+import com.example.mapdungeon.model.genBingo
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -37,6 +39,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
     private lateinit var location: Location
     private val requestPermissions =
         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET)
+    private lateinit var bingo: Bingo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,19 +47,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         val view = mapsBinding.root
         setContentView(view)
 
-        val missionTextViews: MutableList<TextView> = mutableListOf(mapsBinding.mission0, mapsBinding.mission1, mapsBinding.mission2, mapsBinding.mission3, mapsBinding.mission4, mapsBinding.mission5, mapsBinding.mission6, mapsBinding.mission7)
+        val missionTextViews: MutableList<TextView> = mutableListOf(
+            mapsBinding.mission0,
+            mapsBinding.mission1,
+            mapsBinding.mission2,
+            mapsBinding.mission3,
+            mapsBinding.mission4,
+            mapsBinding.mission5,
+            mapsBinding.mission6,
+            mapsBinding.mission7
+        )
 
-        val launcher: ActivityResultLauncher<Intent> = prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            val isClearList = Hiragana.getCurrentClear()
+        val launcher: ActivityResultLauncher<Intent> =
+            prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+                val isClearList = bingo.getClearList() //Hiragana.getCurrentClear()
 
-            for ((index, isClear) in isClearList.withIndex()) {
-                if (isClear) {
-                    missionTextViews[index].setBackgroundColor(resources.getColor(R.color.clear))
+                for ((index, isClear) in isClearList.withIndex()) {
+                    if (isClear) {
+                        missionTextViews[index].setBackgroundColor(resources.getColor(R.color.clear))
+                    }
                 }
 
                 val isBingo = bingoCheck(isClearList)
             }
-        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -81,10 +94,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 //            checkLocation(this, mapsBinding)
 //        }
 
-        Hiragana.setRandomHiragana()
-        val currentMission = Hiragana.getCurrentMission()
+//        Hiragana.setRandomHiragana()
+        bingo = genBingo()
+//        val currentMission = Hiragana.getCurrentMission()
         for ((index, mission) in missionTextViews.withIndex()) {
-            mission.text = currentMission[index].toString()
+            mission.text = bingo.missions[index].missionChar.toString()
         }
     }
 
@@ -96,7 +110,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         location.showLocation()
     }
 
-    fun bingoCheck(isClearList: MutableList<Boolean>):Boolean {
+    fun bingoCheck(isClearList: List<Boolean>): Boolean {
         var isBingo: Boolean = false
         /*
          * * *

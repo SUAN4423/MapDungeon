@@ -13,7 +13,7 @@ class Hiragana {
         private var isClearList: MutableList<Boolean> = mutableListOf(false, false, false, false, false, false, false, false)
         public var addressMap: AddressMap? = null
 
-        public fun setRandomHiragana() {
+        public fun setRandomHiragana(): MutableList<Char> {
             val chars = mutableListOf<Char>()
             while(chars.size < 8){
                 val selectedChar = getRandomHiragana()
@@ -25,6 +25,7 @@ class Hiragana {
             }
             missionChars = chars.shuffled().toMutableList()
             isClearList.replaceAll { false }
+            return missionChars
         }
 
         private fun getRandomHiragana(): Char { // TODO: ひらがなにはあるが、それから始まる日本の都市がない場合その都市の建設(例: "ん"から始まる都市)
