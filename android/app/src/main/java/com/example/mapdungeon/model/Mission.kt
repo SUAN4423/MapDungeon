@@ -1,9 +1,7 @@
 package com.example.mapdungeon.model
 
 
-import android.location.Address
 import com.example.mapdungeon.cityname.AddressMap
-import java.time.ZonedDateTime
 import java.util.*
 
 data class Mission(

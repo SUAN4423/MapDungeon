@@ -12,7 +12,6 @@ data class Bingo(
 ) {
     fun getClearList(): List<Boolean> {
         return missions.map { it.isClear }
-//        return List(8){missions[it].isClear}
     }
     fun getMissionCharsList(): List<Char> {
         return missions.map { it.missionChar }

@@ -14,11 +14,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 
 class Location(activity: Activity, classObject: MapsActivity) {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var _activity: Activity
+    private var fusedLocationClient: FusedLocationProviderClient
+    private var _activity: Activity
 
-    public var latitude: Double = 0.0
-    public var longitude: Double = 0.0
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
 
     init {
         _activity = activity
@@ -64,17 +64,4 @@ class Location(activity: Activity, classObject: MapsActivity) {
             Looper.myLooper()
         )
     }
-
-    public fun showLocation() {
-        val task = Http()
-        val dataset: HttpRequesetDataset = HttpRequesetDataset(latitude, longitude, null, null)
-        task.execute(dataset)
-        Toast.makeText(
-            _activity,
-            "緯度:$latitude, 経度:$longitude, ${
-                task.get().getCityName()
-            }", Toast.LENGTH_LONG
-        ).show()
-    }
-
 }
