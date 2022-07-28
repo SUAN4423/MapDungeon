@@ -45,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
     private lateinit var mMap: GoogleMap
     private val LOCATION_PERMISSION_REQUEST_CODE: Int = 1001
     private lateinit var location: Location
+    private var clearMissionNum = 0
     private val requestPermissions =
         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET)
 
@@ -64,6 +65,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission6,
             mapsBinding.mission7
         )
+
+        fun updateScore () {
+            mapsBinding.themeText.text = "現在のスコア：${clearMissionNum * 100}点"
+        }
 
         fun setMissionText () {
             for ((index, mission) in missionTextViews.withIndex()) {
@@ -101,6 +106,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                         .setTitle("ビンゴしました！")
                         .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
                             resetMission()
+                            clearMissionNum++
+                            updateScore()
                         })
                         .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
                         })
@@ -142,6 +149,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         GlobalData.bingo = genBingo()
         setMissionText()
+
+        updateScore()
     }
 
     override fun onResume() {
