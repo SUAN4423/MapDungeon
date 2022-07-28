@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -18,16 +19,22 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
-import com.example.mapdungeon.cityname.Hiragana
+import androidx.lifecycle.lifecycleScope
 import com.example.mapdungeon.databinding.ActivityMapsBinding
+import com.example.mapdungeon.global.GlobalData
 import com.example.mapdungeon.judge.JudgeActivity
+import com.example.mapdungeon.location.AddressAPIRepository
 import com.example.mapdungeon.location.EXTRA_LATITUDE
 import com.example.mapdungeon.location.EXTRA_LONGITUDE
 import com.example.mapdungeon.location.Location
+import com.example.mapdungeon.model.genBingo
+import com.example.mapdungeon.util.Result
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import kotlinx.coroutines.launch
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissionsResultCallback {
 
@@ -44,19 +51,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         val view = mapsBinding.root
         setContentView(view)
 
-        val missionTextViews: MutableList<TextView> = mutableListOf(mapsBinding.mission0, mapsBinding.mission1, mapsBinding.mission2, mapsBinding.mission3, mapsBinding.mission4, mapsBinding.mission5, mapsBinding.mission6, mapsBinding.mission7)
+        val missionTextViews: MutableList<TextView> = mutableListOf(
+            mapsBinding.mission0,
+            mapsBinding.mission1,
+            mapsBinding.mission2,
+            mapsBinding.mission3,
+            mapsBinding.mission4,
+            mapsBinding.mission5,
+            mapsBinding.mission6,
+            mapsBinding.mission7
+        )
 
-        val launcher: ActivityResultLauncher<Intent> = prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            val isClearList = Hiragana.getCurrentClear()
+        val launcher: ActivityResultLauncher<Intent> =
+            prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+                val isClearList = GlobalData.bingo.getClearList() //Hiragana.getCurrentClear()
 
-            for ((index, isClear) in isClearList.withIndex()) {
-                if (isClear) {
-                    missionTextViews[index].setBackgroundColor(resources.getColor(R.color.clear))
+                for ((index, isClear) in isClearList.withIndex()) {
+                    if (isClear) {
+                        missionTextViews[index].setBackgroundColor(resources.getColor(R.color.clear))
+                    }
                 }
 
                 val isBingo = bingoCheck(isClearList)
+
+                if (isBingo) {
+                    GlobalData.bingo.clearedAt = Date()
+                }
             }
-        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -67,7 +88,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         mapsBinding.button4.setOnClickListener {
             Log.d("debug", "button clicked")
-            locationGetAndCheck(location)
+            toastLocation(latitude = location.latitude, longitude = location.longitude)
         }
 
         mapsBinding.judgeButton.setOnClickListener {
@@ -81,10 +102,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 //            checkLocation(this, mapsBinding)
 //        }
 
-        Hiragana.setRandomHiragana()
-        val currentMission = Hiragana.getCurrentMission()
+//        Hiragana.setRandomHiragana()
+        GlobalData.bingo = genBingo()
+//        val currentMission = Hiragana.getCurrentMission()
         for ((index, mission) in missionTextViews.withIndex()) {
-            mission.text = currentMission[index].toString()
+            mission.text = GlobalData.bingo.missions[index].missionChar.toString()
         }
     }
 
@@ -92,11 +114,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         super.onResume()
     }
 
-    fun locationGetAndCheck(locaton: Location) {
-        location.showLocation()
+    private fun toastLocation(latitude: Double, longitude: Double) {
+        lifecycleScope.launch {
+            when (val res = AddressAPIRepository().getAddress(latitude, longitude)) {
+                is Result.Success -> {
+                    val address = res.data
+
+                    Toast.makeText(
+                        this@MapsActivity,
+                        "緯度:$latitude, 経度:$longitude, ${res.data.str}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else -> {
+                    Toast.makeText(
+                        this@MapsActivity,
+                        "緯度:$latitude, 経度:$longitude, 住所取得失敗",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
-    fun bingoCheck(isClearList: MutableList<Boolean>):Boolean {
+    fun bingoCheck(isClearList: List<Boolean>): Boolean {
         var isBingo: Boolean = false
         /*
          * * *
