@@ -101,14 +101,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                     GlobalData.bingo.clearedAt = Date()
 
                     val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                    builder.setMessage("ビンゴカードを取り替えますか？")
+                    builder.setMessage("")
                         .setTitle("ビンゴしました！")
-                        .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
-                            resetMission()
-                            clearMissionNum++
-                            updateScoreText()
-                        })
-                        .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
+                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                         })
                         .show()
                 }
