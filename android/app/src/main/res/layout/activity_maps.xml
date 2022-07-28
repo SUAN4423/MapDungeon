@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/theme_text"
+        android:id="@+id/score_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
@@ -27,7 +27,7 @@
         android:rowCount="3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/theme_text"
+        app:layout_constraintTop_toBottomOf="@id/score_text"
         app:layout_constraintBottom_toTopOf="@id/map">
         <TextView
             android:id="@+id/mission0"

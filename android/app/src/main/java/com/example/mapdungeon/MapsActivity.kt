@@ -67,7 +67,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         )
 
         fun updateScore () {
-            mapsBinding.themeText.text = "現在のスコア：${clearMissionNum * 100}点"
+            mapsBinding.scoreText.text = "現在のスコア：${clearMissionNum * 100}点"
         }
 
         fun setMissionText () {
