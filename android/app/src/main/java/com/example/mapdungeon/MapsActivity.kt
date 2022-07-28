@@ -78,6 +78,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             for (mission in missionTextViews) {
                 mission.setBackgroundColor(resources.getColor(R.color.unclear))
             }
+            mapsBinding.missionCenter.setBackgroundColor(resources.getColor(R.color.clear))
         }
 
         val launcher: ActivityResultLauncher<Intent> =
