@@ -1,7 +1,6 @@
 package com.example.mapdungeon
 
 import android.Manifest
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -35,7 +34,6 @@ import com.example.mapdungeon.util.Result
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -66,7 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission7
         )
 
-        fun updateScore () {
+        fun updateScoreText () {
             mapsBinding.scoreText.text = "現在のスコア：${clearMissionNum * 100}点"
         }
 
@@ -108,7 +106,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                         .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
                             resetMission()
                             clearMissionNum++
-                            updateScore()
+                            updateScoreText()
                         })
                         .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
                         })
@@ -143,7 +141,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                 .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
                     if(GlobalData.bingo.isClear) {
                         clearMissionNum++
-                        updateScore()
+                        updateScoreText()
                     }
                     resetMission()
                 })
@@ -155,7 +153,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
         GlobalData.bingo = genBingo()
         setMissionText()
 
-        updateScore()
+        updateScoreText()
     }
 
     override fun onResume() {
