@@ -48,9 +48,9 @@ class JudgeActivity : AppCompatActivity() {
                         if (firstKana in missionChars) {
                             "「${firstKana}」から始まる\n市区町村に\n到着しました！"
                         } else {
-                            "「お題に沿った市区町村に\n" +
+                            "お題に沿った市区町村に\n" +
                                     "到着していません\n" +
-                                    "現在の頭文字:: $firstKana"
+                                    "現在の頭文字: $firstKana"
                         }
 
                     judgeBinding.cityText.text = address.str ?: "住所不明"
