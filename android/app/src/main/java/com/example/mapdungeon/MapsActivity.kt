@@ -98,15 +98,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             }
             launcher.launch(intent)
         }
-//        mapsBinding.judgeButton.setOnClickListener {
-//            checkLocation(this, mapsBinding)
-//        }
 
-//        Hiragana.setRandomHiragana()
+        fun setMissionText () {
+            for ((index, mission) in missionTextViews.withIndex()) {
+                mission.text = GlobalData.bingo.missions[index].missionChar.toString()
+            }
+        }
+
         GlobalData.bingo = genBingo()
-//        val currentMission = Hiragana.getCurrentMission()
-        for ((index, mission) in missionTextViews.withIndex()) {
-            mission.text = GlobalData.bingo.missions[index].missionChar.toString()
+        setMissionText()
+
+        fun resetMission () {
+            GlobalData.bingo = genBingo()
+            setMissionText()
+
+            for (mission in missionTextViews) {
+                mission.setBackgroundColor(resources.getColor(R.color.unclear))
+            }
+        }
+
+        mapsBinding.skipButton.setOnClickListener {
+            resetMission()
         }
     }
 
