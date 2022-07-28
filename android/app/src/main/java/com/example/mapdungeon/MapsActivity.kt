@@ -99,6 +99,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                 val isBingo = bingoCheck(isClearList)
 
                 if (isBingo) {
+                    GlobalData.bingo.isClear = true
                     GlobalData.bingo.clearedAt = Date()
 
                     val builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -137,10 +138,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         mapsBinding.skipButton.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setMessage("クリア状況はリセットされます")
-                .setTitle("スキップしますか？")
+            builder.setMessage("クリア状況はリセットされます\nビンゴしていた場合、点数が加算されます")
+                .setTitle("ビンゴカードを取り替えますか？")
                 .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
                     resetMission()
+                    if(GlobalData.bingo.isClear) {
+                        clearMissionNum++
+                        updateScore()
+                    }
                 })
                 .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
                 })
