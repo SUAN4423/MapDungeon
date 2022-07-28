@@ -141,11 +141,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             builder.setMessage("クリア状況はリセットされます\nビンゴしていた場合、点数が加算されます")
                 .setTitle("ビンゴカードを取り替えますか？")
                 .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
-                    resetMission()
                     if(GlobalData.bingo.isClear) {
                         clearMissionNum++
                         updateScore()
                     }
+                    resetMission()
                 })
                 .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
                 })
