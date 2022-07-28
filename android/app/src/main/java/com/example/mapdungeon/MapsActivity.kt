@@ -136,7 +136,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         mapsBinding.skipButton.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setMessage("クリア状況はリセットされます\nビンゴしていた場合、点数が加算されます")
+            builder.setMessage("クリア状況はリセットされます\nビンゴしていた場合、スコアが加算されます")
                 .setTitle("ビンゴカードを取り替えますか？")
                 .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
                     if(GlobalData.bingo.isClear) {
