@@ -1,7 +1,6 @@
 package com.example.mapdungeon
 
 import android.Manifest
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -35,7 +34,6 @@ import com.example.mapdungeon.util.Result
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -45,6 +43,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
     private lateinit var mMap: GoogleMap
     private val LOCATION_PERMISSION_REQUEST_CODE: Int = 1001
     private lateinit var location: Location
+    private var clearMissionNum = 0
     private val requestPermissions =
         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET)
 
@@ -64,6 +63,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission6,
             mapsBinding.mission7
         )
+
+        fun updateScoreText () {
+            mapsBinding.scoreText.text = "現在のスコア：${clearMissionNum * 100}点"
+        }
 
         fun setMissionText () {
             for ((index, mission) in missionTextViews.withIndex()) {
@@ -94,15 +97,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                 val isBingo = bingoCheck(isClearList)
 
                 if (isBingo) {
+                    GlobalData.bingo.isClear = true
                     GlobalData.bingo.clearedAt = Date()
 
                     val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-                    builder.setMessage("ビンゴカードを取り替えますか？")
+                    builder.setMessage("")
                         .setTitle("ビンゴしました！")
-                        .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
-                            resetMission()
-                        })
-                        .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
+                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                         })
                         .show()
                 }
@@ -130,9 +131,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         mapsBinding.skipButton.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setMessage("クリア状況はリセットされます")
-                .setTitle("スキップしますか？")
+            builder.setMessage("クリア状況はリセットされます\nビンゴしていた場合、スコアが加算されます")
+                .setTitle("ビンゴカードを取り替えますか？")
                 .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
+                    if(GlobalData.bingo.isClear) {
+                        clearMissionNum++
+                        updateScoreText()
+                    }
                     resetMission()
                 })
                 .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
@@ -142,6 +147,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
         GlobalData.bingo = genBingo()
         setMissionText()
+
+        updateScoreText()
     }
 
     override fun onResume() {
