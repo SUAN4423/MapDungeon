@@ -65,6 +65,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             mapsBinding.mission7
         )
 
+        fun setMissionText () {
+            for ((index, mission) in missionTextViews.withIndex()) {
+                mission.text = GlobalData.bingo.missions[index].missionChar.toString()
+            }
+        }
+
+        fun resetMission () {
+            GlobalData.bingo = genBingo()
+            setMissionText()
+
+            for (mission in missionTextViews) {
+                mission.setBackgroundColor(resources.getColor(R.color.unclear))
+            }
+        }
+
         val launcher: ActivityResultLauncher<Intent> =
             prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
                 val isClearList = GlobalData.bingo.getClearList() //Hiragana.getCurrentClear()
@@ -84,14 +99,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
                     builder.setMessage("ビンゴカードを取り替えますか？")
                         .setTitle("ビンゴしました！")
                         .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
-                            GlobalData.bingo = genBingo()
-//                                val currentMission = Hiragana.getCurrentMission()
-                            for ((index, mission) in missionTextViews.withIndex()) {
-                                mission.text =
-                                    GlobalData.bingo.missions[index].missionChar.toString()
-                                mission.setBackgroundColor(resources.getColor(R.color.unclear))
-                            }
-                            mission_center.setBackgroundColor(resources.getColor(R.color.clear))
+                            resetMission()
                         })
                         .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
                         })
@@ -119,27 +127,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
             launcher.launch(intent)
         }
 
-        fun setMissionText () {
-            for ((index, mission) in missionTextViews.withIndex()) {
-                mission.text = GlobalData.bingo.missions[index].missionChar.toString()
-            }
+        mapsBinding.skipButton.setOnClickListener {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setMessage("クリア状況はリセットされます")
+                .setTitle("スキップしますか？")
+                .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
+                    resetMission()
+                })
+                .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
+                })
+                .show()
         }
 
         GlobalData.bingo = genBingo()
         setMissionText()
-
-        fun resetMission () {
-            GlobalData.bingo = genBingo()
-            setMissionText()
-
-            for (mission in missionTextViews) {
-                mission.setBackgroundColor(resources.getColor(R.color.unclear))
-            }
-        }
-
-        mapsBinding.skipButton.setOnClickListener {
-            resetMission()
-        }
     }
 
     override fun onResume() {
