@@ -1,6 +1,8 @@
 package com.example.mapdungeon
 
 import android.Manifest
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -33,6 +35,7 @@ import com.example.mapdungeon.util.Result
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -76,6 +79,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnRequestPermissio
 
                 if (isBingo) {
                     GlobalData.bingo.clearedAt = Date()
+
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                    builder.setMessage("ビンゴカードを取り替えますか？")
+                        .setTitle("ビンゴしました！")
+                        .setPositiveButton("はい", DialogInterface.OnClickListener { dialog, id ->
+                            GlobalData.bingo = genBingo()
+//                                val currentMission = Hiragana.getCurrentMission()
+                            for ((index, mission) in missionTextViews.withIndex()) {
+                                mission.text =
+                                    GlobalData.bingo.missions[index].missionChar.toString()
+                                mission.setBackgroundColor(resources.getColor(R.color.unclear))
+                            }
+                            mission_center.setBackgroundColor(resources.getColor(R.color.clear))
+                        })
+                        .setNegativeButton("いいえ", DialogInterface.OnClickListener { dialog, id ->
+                        })
+                        .show()
                 }
             }
 
